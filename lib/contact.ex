@@ -14,8 +14,8 @@ defmodule Email do
   @enforce_keys [:_]
   defstruct @enforce_keys
 
-  @spec !(str :: String.t()) :: t | no_return
-  def !(str) do
+  @spec new!(str :: String.t()) :: t | no_return
+  def new!(str) do
     if str == "blah" do
       %__MODULE__{_: str}
     else
@@ -23,8 +23,8 @@ defmodule Email do
     end
   end
 
-  @spec _(str :: String.t()) :: {:ok, t} | {:error, String.t()}
-  def _(str) do
+  @spec new(str :: String.t()) :: {:ok, t} | {:error, String.t()}
+  def new(str) do
     if str == "blah" do
       {:ok, %__MODULE__{_: str}}
     else
@@ -41,8 +41,8 @@ defmodule Phone do
   @enforce_keys [:_]
   defstruct @enforce_keys
 
-  @spec !(str :: String.t()) :: t | no_return
-  def !(str) do
+  @spec new!(str :: String.t()) :: t | no_return
+  def new!(str) do
     if str == "blah" do
       %__MODULE__{_: str}
     else
@@ -50,8 +50,8 @@ defmodule Phone do
     end
   end
 
-  @spec _(str :: String.t()) :: {:ok, t} | {:error, String.t()}
-  def _(str) do
+  @spec new(str :: String.t()) :: {:ok, t} | {:error, String.t()}
+  def new(str) do
     if str == "blah" do
       {:ok, %__MODULE__{_: str}}
     else
@@ -64,5 +64,5 @@ defmodule Phone do
 end
 
 defmodule Messin do
-  def stuff(str, str), do: Contact.format_types(Email.!("asdf"), Phone.!("asdf"))
+  def stuff(str, str), do: Contact.format_types(Email.new!("asdf"), Phone.new!("asdf"))
 end
