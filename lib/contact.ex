@@ -10,9 +10,11 @@ defmodule Contact do
 end
 
 defmodule Email do
-  @opaque t :: %__MODULE__{_: String.t()}
-  @enforce_keys [:_]
-  defstruct @enforce_keys
+  use TypedStruct
+
+  typedstruct opaque: true do
+    field :_, String.t(), enforce: true
+  end
 
   @spec new!(str :: String.t()) :: t | no_return
   def new!(str) do
