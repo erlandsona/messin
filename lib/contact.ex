@@ -1,5 +1,5 @@
 defmodule Phone do
-  @opaque t :: %__MODULE__{_: String.t()}
+  @type t :: %__MODULE__{_: String.t()}
   @enforce_keys [:_]
   defstruct @enforce_keys
 
@@ -28,7 +28,7 @@ end
 defmodule Email do
   use TypedEctoSchema
 
-  typed_embedded_schema opaque: true do
+  typed_embedded_schema do
     field(:_, :string, enforce: true, null: false)
   end
 
@@ -78,7 +78,7 @@ end
 defmodule Address do
   use TypedEctoSchema
 
-  typed_embedded_schema opaque: true do
+  typed_embedded_schema do
     field(:street, :string, enforce: true, null: false)
     field(:unit, :string, enforce: true)
     field(:city, :string, enforce: true, null: false)
@@ -93,7 +93,7 @@ defmodule Address do
 
   @spec format(t) :: String.t()
   def format(%__MODULE__{street: street, unit: unit, city: city, state: st}) do
-    "#{street} #{unit}
+    "#{street} #{unit || ""}
     #{city}, #{St.to_s(st)}"
   end
 end
@@ -112,11 +112,26 @@ end
 
 defmodule Messin do
   @spec stuff :: String.t() | no_return
-  def stuff,
-    do:
-      Contact.format_types(
-        Email.new!("blah"),
-        Phone.new!("blah"),
-        Address.new!("555 5th St", "Nash", St.new!(:tennessee), "C")
-      )
+  def stuff do
+    Contact.format_types(
+      Email.new!("blah"),
+      Phone.new!("blah"),
+      Address.new!("555 5th St", "Nash", St.new!(:tennessee), "C")
+    )
+  end
+end
+
+defmodule Controller do
+  @spec handle(Email.t() | Phone.t() | Address.t()) :: String.t()
+  def handle(event) do
+    case event do
+      %Address{} = e -> Address.format(e)
+      %Email{} = e -> Email._(e)
+      # %Phone{} = e -> Phone._(e)
+    end
+  end
+end
+
+defmodule Test do
+  def blah(), do: Controller.handle(Email.new!("Stuff"))
 end
