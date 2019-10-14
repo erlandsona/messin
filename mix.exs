@@ -23,9 +23,11 @@ defmodule Messin.MixProject do
     [
       {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false},
       {:typed_ecto_schema, "~> 0.1.0"},
-      {:gradualixir, github: "overminddl1/gradualixir", ref: "master"}
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
+      {:gradualixir, github: "overminddl1/gradualixir", ref: "master"},
+      # {:ex_type, github: "gyson/ex_type", ref: "master", only: :dev, runtime: false},
+      {:ex_type, "~> 0.4.0", only: :dev, runtime: false},
+      # Optional
+      # {:ex_type_runtime, "~> 0.1.0"}
     ]
   end
 end

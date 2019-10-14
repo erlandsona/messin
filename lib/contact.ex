@@ -28,8 +28,9 @@ end
 defmodule Email do
   use TypedEctoSchema
 
+  @primary_key {:_, :string, enforce: true, null: false}
   typed_embedded_schema do
-    field(:_, :string, enforce: true, null: false)
+    # field(:_, :string, enforce: true, null: false)
   end
 
   @spec new!(str :: String.t()) :: t | no_return
@@ -57,12 +58,13 @@ end
 defmodule St do
   use TypedEctoSchema
 
+  @primary_key false
   typed_embedded_schema opaque: true do
     field(:_, :string, enforce: true, null: false) ::
       :oregon | :washington | :colorado | :tennessee | :new_york
   end
 
-  @spec new!(st :: atom) :: t | no_return
+  @spec new!(atom()) :: t() | no_return()
   def new!(st) do
     if st in [:oregon, :washington, :colorado, :tennessee, :new_york] do
       %__MODULE__{_: st}
@@ -78,6 +80,7 @@ end
 defmodule Address do
   use TypedEctoSchema
 
+  @primary_key false
   typed_embedded_schema do
     field(:street, :string, enforce: true, null: false)
     field(:unit, :string, enforce: true)
@@ -85,7 +88,7 @@ defmodule Address do
     field(:state, :string, enforce: true, null: false) :: St.t()
   end
 
-  @spec new!(street :: String.t(), city :: String.t(), state :: St.t(), unit :: String.t()) ::
+  @spec new!(street :: String.t(), city :: String.t(), state :: St.t(), unit :: String.t() | nil) ::
           t | no_return
   def new!(street, city, state, unit) do
     %__MODULE__{street: street, unit: unit, city: city, state: state}
@@ -111,8 +114,8 @@ defmodule Contact do
 end
 
 defmodule Messin do
-  @spec stuff :: String.t() | no_return
-  def stuff do
+  @spec stuff() :: String.t() | no_return
+  def stuff() do
     Contact.format_types(
       Email.new!("blah"),
       Phone.new!("blah"),
@@ -123,13 +126,15 @@ end
 
 defmodule Controller do
   @spec handle(Email.t() | Phone.t() | Address.t()) :: String.t()
-  def handle(event) do
-    case event do
-      %Address{} = e -> Address.format(e)
-      %Email{} = e -> Email._(e)
-      # %Phone{} = e -> Phone._(e)
-    end
-  end
+  def handle(%Address{} = e), do: Address.format(e)
+  def handle(%Email{} = e), do: Email._(e)
+  # Missing Phone branch makes this function non-exhaustive.
+  # This should be a type failure but with "Success" typing
+  # this function passes.
+  # Our types are lying to us about the safety of our program.
+  #
+  # %Phone{} = e ->
+  #   Phone._(e)
 end
 
 defmodule Test do
