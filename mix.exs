@@ -25,7 +25,8 @@ defmodule Messin.MixProject do
       {:typed_ecto_schema, "~> 0.1.0"},
       {:gradualixir, github: "overminddl1/gradualixir", ref: "master"},
       # {:ex_type, github: "gyson/ex_type", ref: "master", only: :dev, runtime: false},
-      {:ex_type, "~> 0.4.0", only: :dev, runtime: false},
+      # {:ex_type, "~> 0.4.0", only: :dev, runtime: false},
+      {:ex_type, path: "../ex_type", only: :dev, runtime: false},
       # Optional
       # {:ex_type_runtime, "~> 0.1.0"}
     ]
